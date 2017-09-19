@@ -14,7 +14,7 @@ using std::pair;
 using std::vector;
 
 vector<Line> parseLines(std::ifstream& inputFile);
-vector<vector<int>> searchTriangles(const vector<Line>& lines); 
+vector<vector<Coord>> searchTriangles(const vector<Line>& lines); 
 
 int main(int argc, char* argv[]) {
     // Wurde ein Dateiname übergeben?
@@ -23,13 +23,21 @@ int main(int argc, char* argv[]) {
         auto lines = parseLines(inputFile);      // Parsen der Linien
         auto triangles = searchTriangles(lines); // Suche nach Dreiecken
 
-        cout << "Habe " << triangles.size() << " Dreieck(e) gefunden. Ist eine Ausgabe \
+        cerr << "Habe " << triangles.size() << " Dreieck(e) gefunden. Ist eine Ausgabe \
                                                 in Vektorgrafiken gewünscht? (Y/N) \n";
         char answer;
         cin >> answer;
 
         if (answer == 'Y') {
-            cout << "Ätschibetsch, nicht implementiert \n";
+            cerr << "Ätschibetsch, nicht implementiert \n";
+        }
+
+        cout << triangles.size() << "\n";
+        for (auto triangle : triangles) {
+            for (Coord coord : triangle) {
+                cout << coord.x_ << " " << coord.y_ << " ";
+            }
+            cout << "\n";
         }
     } else {
         cerr << "Das Programm muss mit dem Dateinamen der Geradenliste als einzigen Parameter aufgerufen werden.\n";
@@ -40,10 +48,12 @@ int main(int argc, char* argv[]) {
 // const vector<Line>& lines: Geradengleichungen aller Geraden
 // pos: Aktuelle Tiefe der Rekursion
 // vector<int> soFar: Im aktuellen Stack ausgewählte Geraden
-vector<vector<int>> searchTriangles(const vector<Line>& lines, int pos, vector<int> soFar) {
+vector<vector<Coord>> searchTriangles(const vector<Line>& lines, int pos, vector<int> soFar) {
     // Rekursionsanker A: Es wurden drei Geraden ausgewählt.
     //                    Test ob sie ein Dreieck bilden.
     if (soFar.size() == 3) {
+        vector<Coord> intersections; // Vektor über die Schnittpunkte
+
         // Checke folgende Schnittpunkte 0-1, 0-2, 1-2
         for (int i = 0; i < 2; ++i) {
             Line a = lines[soFar[i]]; // Gerade A
@@ -56,8 +66,11 @@ vector<vector<int>> searchTriangles(const vector<Line>& lines, int pos, vector<i
                     // Liegt der Schnittpunkt nicht nur auf den Geraden,
                     // sondern auch in beiden Fällen auf den **Strecken**?
                     Coord intersection = intersectionData.second;
-                    if (!(a.isOnLine(intersection) &&
-                          b.isOnLine(intersection))) {
+                    if (a.isOnLine(intersection) &&
+                          b.isOnLine(intersection)) {
+                        // Wir haben einen gültigen Schnittpunkt gefunden
+                        intersections.push_back(intersection); // Speichern
+                    } else {
                         // Bei mindestens einer Strecke liegt der Punkt außerhalb
                         return {};
                     }
@@ -70,8 +83,9 @@ vector<vector<int>> searchTriangles(const vector<Line>& lines, int pos, vector<i
         
         // Alle Strecken schneiden sich auf einem Punkt auf der Strecke
         // --> ein neues Dreieck wurde gefunden
-        vector<vector<int>> newVector;
-        newVector.push_back(soFar);
+        // Intersection ausgeben
+        vector<vector<Coord>> newVector;
+        newVector.push_back(intersections);
 
         return newVector;
     
@@ -100,7 +114,7 @@ vector<vector<int>> searchTriangles(const vector<Line>& lines, int pos, vector<i
 }
 
 // Überladung zum Aufruf aus main()
-vector<vector<int>> searchTriangles(const vector<Line>& lines) {
+vector<vector<Coord>> searchTriangles(const vector<Line>& lines) {
     vector<int> empty; // Bisher noch keine Strecke gepickt
     return searchTriangles(lines, 0, empty);
 }
