@@ -2,7 +2,7 @@
 #define COORD_HPP
 
 struct Coord {
-        double x;
-        double y;
+        double x_;
+        double y_;
 };
 #endif //COORD_HPP
