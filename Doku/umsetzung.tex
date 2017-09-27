@@ -1,0 +1,86 @@
+\subsection {Datenstruktur für Strecken}
+Zentral für die Lösungsidee ist eine effiziente Berechnung von Schnittpunkten zwischen den Strecken.
+Am effizientesten lassen sich Schnittpunkte mit mathematischen Verfahren berechnen.
+Für eine Lösung mittels mathematischer Verfahren ist es nötig, die Strecken aus zwei Punkten mit einer Geraden, die durch beide Punkte verläuft, zu repräsentieren.
+
+Ich habe mir überlegt, dass sich zu jeder möglichen Kombination aus zwei Punkten entweder eine Gerade mit der Funktiom \(y=mx+n\) oder eine Senkrechte zur x-Achse mit der Funktionsgleichung \(x=n\) durch die beiden Punkte aufstellen lässt.
+Eine Senkrechte vom Typen \(x=n\) wird benötigt, wenn Anfangs- und Endpunkt der Strecke auf der gleichen x-Koordinate liegen. Schließlich müsste eine solche lineare Funktion über eine unendliche Steigung verfügen.
+Ansonsten wird eine lineare Funktion vom Typen \(y=mx+n\) aufgestellt.
+
+Die x- und y-Koordinaten des Anfangs- und Endpunktes einer jeden Strecke werden in je zwei Aggregaten in einer "`Strecke"'-Klasse (\texttt{line}) gespeichert.
+Der Konstruktor berechnet aus diesen beiden Punkten eine Geradengleichung.
+
+Falls eine lineare Funktion verwendet wird, wird die Steigung \(m\) der Geradengleichung folgendermaßen berechnet und in der Variablen \texttt{m\_} gespeichert:
+
+\begin{equation}
+    m=\frac{y_{P2} - y_{P1}}{x_{P2} - x_{P1}}
+\end{equation}
+
+Der y-Achsenabschnitt \(n\) ergibt sich aus folgender Rechnung und wird in der Variablen \texttt{n\_} abgelegt:
+
+\begin{equation}
+    n=y_{P1} - x_{P1} \times m
+\end{equation}
+
+Falls, wie oben dargestellt, eine Senkrechte zur x-Achse benötigt wird, wird die Nullstelle dieser Senkrechten in der Variablen \texttt{n\_} vermerkt.
+
+Um später feststellen zu können, ob es sich um lineare Funktion oder um eine Senkrechte handelt, wird in der Klasse der Bool \texttt{isLinearFunction} entsprechend gesetzt.
+
+\subsection {Bilden der möglichen Streckenkombinationen}
+Um für jede mögliche Streckenkombination das Vorhandensein eines Dreiecks prüfen zu können, müssen alle möglichen Kombination zunächst einmal aufgestellt werden. Dies habe ich mithilfe einer rekursiven Funktion implementiert.
+
+Diese interpretiert den Streckenauswahlprozess als einen binären Baum. Jede Strecke kann entweder ausgewählt werden oder nicht.
+
+Das bedeutet, dass die Auswahlfunktion zunächst mit einer leeren Menge als Auswahl aufgerufen wird.
+Darauf kopiert sie diese Menge.
+Der kopierten Menge wird die erste Strecke hinzugefügt.
+In der nächsten Rekursionsstufe werden dann beide bisherigen Mengen dupliziert und jeweils die zweite Strecke hinzugefügt.
+
+Sobald eine Menge drei Strecken enthält, kann überprüft werden, ob die enthaltenen Strecken ein Dreieck bilden. Sobald die Rekursion beendet ist, wurden alle möglichen Kombinationen überprüft.
+
+\subsection{Streckenauswahlevaluation}
+Um zu überprüfen, ob eine Menge von drei Strecken ein Dreieck bildet, muss nur überprüft werden, ob jede der drei Strecken sich mit den anderen beiden Strecken schneidet.
+Dann existieren schließlich "`drei Ecken"'. Diese Überprüfung findet durch simples Ausprobieren statt.
+
+Zwischen zwei linearen Funktion lässt sich der Schnittpunkt folgendermaßen durch Gleichsetzen ermitteln:
+
+\begin{equation}
+    \begin{aligned}
+        m_1x+n_1 &= m_2x+n_2             &&\quad\vert -n_2          \\
+        m_1x+n_1-n_2 &= m_2x             &&\quad\vert -m_1x         \\
+        n_1-n_2 &= (m_2-m_1)x            &&\quad\vert \div(m_2-m_1) \\
+        x &= \frac{n_1-n_2}{m_2-m_1}                                \\
+        y &= m_1x+n_2                                               \\
+    \end{aligned}
+    \label{eq:linearschnitt}
+\end{equation}
+
+Der Schnittpunkt zwischen einer Geraden \(y=m_1x+n_1\) und einer Senkrechten \(x=n_2\), liegt bei der y-Koordinate, die die gerade an der x-Stelle der Senkrechten annimmt. 
+
+\begin{equation}
+    \begin{aligned}
+        x &= n_2                    \\
+        y &= m_1 \times n_2 + n_1   \\
+    \end{aligned}
+    \label{eq:senkrechtschnitt}
+\end{equation}
+
+Falls beide Funktionen Senkrechten sind, können sie sich nur schneiden, wenn Start- oder Endpunkte sich überlappen.
+Ansonsten müssen beide Senkrechten parallel zueinander sein.
+Schließlich sind aufeinander liegende Strecken laut Aufgabenstellung ausgeschlossen.
+
+Abschließend muss für jeden Schnittpunkt geprüft werden, ob er zwischen dem Start- und Endpunkt beider Strecken liegt.
+Schließlich können die Geraden sich außerhalb der Strecken, die nur ein Abschnitt der Geraden sind, schneiden.
+Im Sinne der Aufgabenstellung zählen nur Schnittpunkte der Strecken.
+
+Obengenannte Rechnungen sind in der Klasse der Geraden implementiert. Je nachdem, welche Strecken der Funktion übergeben wurden, führt sie die entsprechenden Rechnungen durch. Diese Funktion gibt ein \texttt{pair<bool, Coord} zurück.
+Nur wenn der Bool auf true steht, ist im zweiten Feld des Paars ein Schnittpunkt vermerkt.
+
+In einer weiteren Funktion, \texttt{isOnLine(..)}, wird, sodenn die Geraden sich schneiden, überprüft, ob die übergebene Koordinate zwischen oder auf den die Strecke begrenzenden Punkten liegt.
+
+Wenn alle Strecken sich wie oben beschrieben kreuzen, bilden die übergebenen Strecken ein Dreieck. Dieses kann anschließend ausgegeben werden.
+
+\subsection {Grafische Ausgabe}
+TODO
+
+LAUFZEIT --> TODO
