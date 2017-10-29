@@ -27,5 +27,9 @@ class Line {
         bool isOnLine (const Coord& coord) const;
         // Konstruktor
         Line(Coord a, Coord b);
+
+        std::pair<Coord, Coord> coords() {
+            return std::make_pair(a_, b_);
+        }
 };
 #endif //LINE_HPP
