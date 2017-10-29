@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <utility>
 #include <vector>
@@ -23,6 +24,9 @@ vector<vector<Coord>> searchTriangles(const vector<Line>& lines);
 // cerr: Interaktion mit dem Nutzer
 // --> Piping der Ausgabe in Datei möglich!
 int main(int argc, char* argv[]) {
+    // Parameter für cout
+    cout << std::setprecision(2) << std::fixed;
+
     // Wurde ein Dateiname übergeben?
     if (argc >= 2) {
         std::ifstream inputFile (argv[1]);       // Erstellen des Streams
