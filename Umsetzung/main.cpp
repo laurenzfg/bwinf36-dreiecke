@@ -13,9 +13,15 @@ using std::cerr;
 using std::pair;
 using std::vector;
 
+// Vorwärtsdeklarationen der implementierten Funktionen
+// Einlesen / Berechnen der Strecken
 vector<Line> parseLines(std::ifstream& inputFile);
+// Suche nach Dreiecken
 vector<vector<Coord>> searchTriangles(const vector<Line>& lines); 
 
+// cout: Linien, die die Dreiecke bilden
+// cerr: Interaktion mit dem Nutzer
+// --> Piping der Ausgabe in Datei möglich!
 int main(int argc, char* argv[]) {
     // Wurde ein Dateiname übergeben?
     if (argc >= 2) {
@@ -24,24 +30,52 @@ int main(int argc, char* argv[]) {
         auto triangles = searchTriangles(lines); // Suche nach Dreiecken
 
         cerr << "Habe " << triangles.size() << " Dreieck(e) gefunden. Ist eine Ausgabe \
-                                                in Vektorgrafiken gewünscht? (Y/N) \n";
-        char answer;
-        cin >> answer;
+in Vektorgrafiken gewünscht? (Y/N) \n";
+        char answer;   // Einlesen der Antwort
+        cin >> answer; // auf o.g. Frage
 
-        if (answer == 'Y') {
-            cerr << "Ätschibetsch, nicht implementiert \n";
-        }
-
+        // Azsgabe der gefundenen Dreiecke auf cout
         cout << triangles.size() << "\n";
-        for (auto triangle : triangles) {
-            for (Coord coord : triangle) {
+        for (auto triangle : triangles) { // ALLE Dreicke
+            for (Coord coord : triangle) { // ALLE Linien
                 cout << coord.x_ << " " << coord.y_ << " ";
             }
             cout << "\n";
         }
+        
+        // Ggfs. Ausgabe in Vektorgrafiken
+        if (answer == 'Y') {
+            cerr << "Ätschibetsch, (noch) nicht implementiert \n";
+        }
     } else {
         cerr << "Das Programm muss mit dem Dateinamen der Geradenliste als einzigen Parameter aufgerufen werden.\n";
     }
+}
+
+// Laden der Strecken aus der Eingabedatei
+vector<Line> parseLines(std::ifstream& inputFile) {
+    vector<Line> coordList;
+    
+    if (inputFile.is_open()) {
+        int n; // Streckenzahl in der Eingabe
+        inputFile >> n;
+
+        for (int i = 0; i < n; ++i) {
+            double x1, y1, x2, y2;
+            inputFile >> x1 >> y1 >> x2 >> y2;
+            // Speichern der Koordinaten in Aggregaten
+            Coord a = {x1, y1};
+            Coord b = {x2, y2};
+            
+            // C++11 ist NINJA-C++
+            // Konstruktur invoken ohne auch nur die Klasse explizit zu nennen
+            // WIE GEIL IST DAS DEN?
+            // BTW: Die Geradengleichung wird bei dieser Gelegenheit mit aufgestellt
+            coordList.emplace_back(a,b);
+        }
+    }
+
+    return coordList;
 }
 
 // Testet rekursiv alle möglichen Geradenkombinationen auf das Bilden eine Dreiecks
@@ -113,34 +147,9 @@ vector<vector<Coord>> searchTriangles(const vector<Line>& lines, int pos, vector
     }
 }
 
-// Überladung zum Aufruf aus main()
+// Überladung von oberer Funktion zum Aufruf aus main()
 vector<vector<Coord>> searchTriangles(const vector<Line>& lines) {
     vector<int> empty; // Bisher noch keine Strecke gepickt
     return searchTriangles(lines, 0, empty);
 }
 
-// Laden der Strecken aus der Eingabedatei
-vector<Line> parseLines(std::ifstream& inputFile) {
-    vector<Line> coordList;
-    
-    if (inputFile.is_open()) {
-        int n; // Streckenzahl
-        inputFile >> n;
-
-        for (int i = 0; i < n; ++i) {
-            double x1, y1, x2, y2;
-            inputFile >> x1 >> y1 >> x2 >> y2;
-            // Speichern der Koordinaten in Aggregaten
-            Coord a = {x1, y1};
-            Coord b = {x2, y2};
-            
-            // C++11 ist NINJA-C++
-            // Konstruktur invoken ohne auch nur die Klasse explizit zu nennen
-            // WIE GEIL IST DAS DEN?
-            // BTW: Die Geradengleichung wird bei dieser Gelegenheit mit aufgestellt
-            coordList.emplace_back(a,b);
-        }
-    }
-
-    return coordList;
-}

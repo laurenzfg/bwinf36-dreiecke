@@ -1,8 +1,8 @@
 #ifndef LINE_HPP
 #define LINE_HPP
 
-#include <iostream> // ostream
-#include <utility>  // pair
+#include <iostream>
+#include <utility>
 #include "coord.hpp"
 
 // Punkt A bildet mit Punkt B folgende lineare Funktion
@@ -14,7 +14,7 @@ class Line {
     
     bool isLinearFunction_;
     // Bei einer linearen Funktion speichert m_ und n_ den jeweiligen 
-    // Funktionsbestandteil, bei einer vertikalen Linie speichert m_
+    // Funktionsbestandteil, bei einer vertikalen Linie speichert n_
     // die Nullstelle der Senkrechten
     double m_, n_;
      
