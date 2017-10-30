@@ -94,14 +94,20 @@ vector<Line> parseLines(std::ifstream& inputFile) {
 }
 
 // Testet rekursiv alle möglichen Geradenkombinationen auf das Bilden eine Dreiecks
+// Teile-und-Herrsche-Strategie: (s. Doku)
+//  1. Alle möglichen Kombinationen aus 3 Strecken
+//  2. Bilden diese ein Dreieck?
 // const vector<Line>& lines: Geradengleichungen aller Geraden
 // pos: Aktuelle Tiefe der Rekursion
 // vector<int> soFar: Im aktuellen Stack ausgewählte Geraden
+// Rückgabe: Menge der Dreiecke
 vector<vector<Coord>> searchTriangles(const vector<Line>& lines, int pos, vector<int> soFar) {
     // Rekursionsanker A: Es wurden drei Geraden ausgewählt.
-    //                    Test ob sie ein Dreieck bilden.
+    //                    Test ob sie ein Dreieck bilden.a
+    // Liefert 1er Menge mit Dreieck oder leere Menge
     if (soFar.size() == 3) {
         vector<Coord> intersections; // Vektor über die Schnittpunkte
+                                     // ggfs. Eckpunkte des Dreiecks!
 
         // Checke folgende Schnittpunkte 0-1, 0-2, 1-2
         for (int i = 0; i < 2; ++i) {
@@ -120,34 +126,36 @@ vector<vector<Coord>> searchTriangles(const vector<Line>& lines, int pos, vector
                         // Haben wir einen schon bekannten Schnittpunkt nochmal gefunden?
                         for (Coord other : intersections) {
                             if (intersection.equals(other))
-                                // Alle Schnittpunkte müssen unterschiedlich sein!
-                                return {};
+                                // Alle Schnittpunkte müssen unterschiedlich sein! (Fläche > 0)
+                                return {}; // --> Das ist kein Dreieck
                         }
                         // Wir haben einen gültigen Schnittpunkt gefunden
                         intersections.push_back(intersection); // Speichern
                     } else {
                         // Bei mindestens einer Strecke liegt der Punkt außerhalb
-                        return {};
+                        return {}; // --> Das ist kein Dreieck
                     }
                 } else {
                     // Es existiert kein Schnittpunkt
-                    return {};
+                    return {}; //--> Das ist kein Dreieck
                 }
             }
         }
         
         // Alle Strecken schneiden sich auf einem Punkt auf der Strecke
         // --> ein neues Dreieck wurde gefunden
+        // Zunächst ist also die Menge der Dreiecke eine Menge der Größe 1
         vector<vector<Coord>> newVector;
         newVector.push_back(intersections);
 
-        return newVector;
+        return newVector; // 1er Menge zurückgeben
+        // (Wurde kein Dreieck gefunden leere Menge {}
     
     // Rekursionsanker B: Die Rekursionstiefe überschreitet die Anzahl der Geraden.
     //                    Dann ist keine valide Geradenauswahl getroffen worden.
     } else if (lines.size() == pos) {
         // Nicht genug Linien gepickt --> NOPE
-        return {};
+        return {}; // Leere Menge
     } else  {
         // Es gilt, noch eine Strecke zu picken
         // Es gibt zwei Möglichkeiten:
@@ -161,16 +169,17 @@ vector<vector<Coord>> searchTriangles(const vector<Line>& lines, int pos, vector
         auto b = searchTriangles(lines, pos + 1, soFarPlusOne);
         
         // Vereinen des Ergebnisses von beiden Blättern des Rekursionsbaumes
-        a.insert(a.end(), b.begin(), b.end());        
+        a.insert(a.end(), b.begin(), b.end()); // Damit ne Gesamtmenge entsteht!
 
-        return a; // Eine Ebene höher / Endgültige Rückgabe
+        return a; // Endrückgabe / 
+                  // Rückgabe der vereinten Menge zur nächsthöheren Ebene
     }
 }
 
 // Überladung von oberer Funktion zum Aufruf aus main()
 vector<vector<Coord>> searchTriangles(const vector<Line>& lines) {
     vector<int> empty; // Bisher noch keine Strecke gepickt
-    return searchTriangles(lines, 0, empty);
+    return searchTriangles(lines, 0, empty); // GO!
 }
 
 // Gibt alle Dreiecke in eine HTML-Datei aus

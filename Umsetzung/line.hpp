@@ -28,6 +28,7 @@ class Line {
         // Konstruktor
         Line(Coord a, Coord b);
 
+        // Rückgabe von Anfangs-/Endpunkt der **Strecke**
         std::pair<Coord, Coord> coords() {
             return std::make_pair(a_, b_);
         }

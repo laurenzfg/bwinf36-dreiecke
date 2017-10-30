@@ -27,7 +27,7 @@ Line::Line(Coord a, Coord b)
 // und das Coord enthält den Schnittpunkt
 pair<bool, Coord> Line::calculateIntersection (const Line& otherLine) const {
     // Je nach Funktionstypenkombination ist eine andere Schnittpunktermittelungs-
-    // funktion anzuwenden
+    // methodik anzuwenden
     bool thisLinear = isLinearFunction_;
     bool otherLinear = otherLine.isLinearFunction_;
     if (!thisLinear && !otherLinear) {
