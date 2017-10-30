@@ -1,1 +1,1 @@
-g++ -O -o dreiecke.x main.cpp line.cpp
+g++ -O -o dreiecke.x main.cpp line.cpp coord.cpp

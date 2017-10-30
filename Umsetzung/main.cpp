@@ -117,6 +117,12 @@ vector<vector<Coord>> searchTriangles(const vector<Line>& lines, int pos, vector
                     Coord intersection = intersectionData.second;
                     if (a.isOnLine(intersection) &&
                           b.isOnLine(intersection)) {
+                        // Haben wir einen schon bekannten Schnittpunkt nochmal gefunden?
+                        for (Coord other : intersections) {
+                            if (intersection.equals(other))
+                                // Alle Schnittpunkte müssen unterschiedlich sein!
+                                return {};
+                        }
                         // Wir haben einen gültigen Schnittpunkt gefunden
                         intersections.push_back(intersection); // Speichern
                     } else {
@@ -132,7 +138,6 @@ vector<vector<Coord>> searchTriangles(const vector<Line>& lines, int pos, vector
         
         // Alle Strecken schneiden sich auf einem Punkt auf der Strecke
         // --> ein neues Dreieck wurde gefunden
-        // Intersection ausgeben
         vector<vector<Coord>> newVector;
         newVector.push_back(intersections);
 
