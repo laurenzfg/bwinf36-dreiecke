@@ -1,5 +1,5 @@
 *.x
-*.html
+Umsetzung/*.html
 # Created by https://www.gitignore.io/api/vim,latex
 
 ### LaTeX ###
