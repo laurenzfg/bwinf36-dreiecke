@@ -174,8 +174,8 @@ vector<vector<Coord>> searchTriangles(const vector<Line>& lines) {
 }
 
 // Gibt alle Dreiecke in eine HTML-Datei aus
-std::ostream& vector_out(const vector<vector<Coord>>& triangles, const vector<Line>& lines, 
-                         std::ostream& os) {
+// Das ist jetzt wirklich kein "guter" Code, aber es ist "nur" I/O...
+std::ostream& vector_out(const vector<vector<Coord>>& triangles, const vector<Line>& lines, std::ostream& os) {
     double max = 0.0; // Größte gefunde Koordinate für Canvasgröße
     
     for (Line line : lines) { // wird hiermit gesucht
@@ -190,6 +190,21 @@ std::ostream& vector_out(const vector<vector<Coord>>& triangles, const vector<Li
 
     // Titelei
     os << "<!DOCTYPE html>\n<html>\n<body>\n";
+
+    // Ausgabe der Grafik
+    os << "<h1>Eingabegrafik</h1>\n"; // Überschrift
+    os << "<svg width=\"" << total << "\" height=\"" << total << "\" "; // Canvasgröße
+    os << "viewBox=\"-20 -20 " << max << " " << max << "\">\n"; // Koordinatensystem
+    os << "<rect width=\"100%\" height=\"100%\" fill=\"white\" />\n"; // Weißer BG
+
+    // Ausgabe der Zeichnung
+    for (Line line : lines) {
+        auto coords = line.coords();
+        os << "<line x1=\"" << coords.first.x_ << "\" y1=\"" << coords.first.y_ << "\"";
+        os << "x2=\"" << coords.second.x_ << "\" y2=\"" << coords.second.y_ << "\"";
+        os << "stroke=\"black\" stroke-width=\"1\" />\n";
+    }
+    os << "</svg>\n";
 
     unsigned cnt = 0; // Dreieckscounter für die Überschriften
     for (auto triangle : triangles) { // ALLE Dreicke
