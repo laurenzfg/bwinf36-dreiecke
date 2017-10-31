@@ -35,6 +35,11 @@ Um später feststellen zu können, ob es sich um lineare Funktion oder um eine S
 handelt, wird außerdem der Bool \texttt{isLinearFunction\_} entsprechend gesetzt.
 
 \subsection {Bilden der möglichen Streckenkombinationen}
+\begin{wrapfigure}{r}{0.5\textwidth}
+    \input{binbaum.tex}
+    \caption{Auswahl der Streckenkombinationen}
+    \label{abb:streckrek}
+\end{wrapfigure}
 Um für jede mögliche Streckenkombination das Vorhandensein eines Dreiecks prüfen zu können, müssen alle möglichen Kombination zunächst einmal aufgestellt werden. Dies habe ich mithilfe einer rekursiven Funktion implementiert.
 
 Ich habe den Streckenauswahlprozess als einen binären Baum interpretiert. Jede Strecke kann entweder Teil einer Auswahl sein -- oder eben auch nicht.
@@ -48,7 +53,7 @@ Strecke als Inhalt (die erste Strecke wurde ausgewählt).
 
 In der nächsten Rekursionsstufe werden dann beide Mengen kopiert und den Kopien jeweils
 die zweite Strecke hinzugefügt. Die Mengen nach den ersten drei Rekursionen habe ich
-in der nebenstehenden Illustration dargestellt. TODO
+in Abbildung \ref{abb:streckrek} dargestellt.
 
 Sobald eine Menge drei Strecken enthält, kann überprüft werden, ob die enthaltenen
 Strecken ein Dreieck bilden.
@@ -100,6 +105,13 @@ können diese beiden Senkrechten unmöglich gemeinsam mit einer Geraden
 ein Dreieck bilden. Daher kann angenommen werden, dass eine Auswahl mit zwei Senkrechten
 kein Dreieck bilden kann.
 
+\begin{wrapfigure}{r}{0.3\textwidth}
+    \begin{center}
+    \input{dreieckenull.tex}
+    \end{center}
+    \caption{Dreieck mit der Flächengröße 0}
+    \label{abb:dreieck}
+\end{wrapfigure}
 Abschließend muss für jeden Schnittpunkt geprüft werden,
 ob er zwischen dem Start- und Endpunkt beider Strecken liegt.
 Schließlich können die Geraden sich außerhalb der Strecken,
@@ -108,7 +120,7 @@ Im Sinne der Aufgabenstellung zählen nur Schnittpunkte der Strecken.
 
 Außerdem muss überprüft werden, dass die Schnittpunkte sich nicht gleichen.
 Schließlich hätte das Dreieck sonst einen Flächeninhalt von Null.
-Ein Beispiel für sich gleichende Schnittpunkte ist Abb. TODO.
+Ein Beispiel für sich gleichende Schnittpunkte ist Abb. \ref{abb:dreieck}.
 
 Obengenannte Rechnungen sind in der Geradenklasse \texttt{line} in der Funktion
 \texttt{calculateIntersections} implementiert.
