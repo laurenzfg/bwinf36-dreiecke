@@ -1,48 +1,72 @@
-\subsection {Datenstruktur für Strecken}
-Zentral für die Lösungsidee ist eine effiziente Berechnung von Schnittpunkten zwischen den Strecken.
-Am effizientesten lassen sich Schnittpunkte mit mathematischen Verfahren berechnen.
-Für eine Lösung mittels mathematischer Verfahren ist es nötig, die Strecken aus zwei Punkten mit einer Geraden, die durch beide Punkte verläuft, zu repräsentieren.
+\subsection {Datenstruktur für Strecken / Geraden}
+Zentral für die Lösungsidee ist eine effiziente Berechnung von Schnittpunkten
+zwischen den Strecken.
+Wie beschrieben werden dafür die Strecken in Geraden konvertiert.
 
-Ich habe mir überlegt, dass sich zu jeder möglichen Kombination aus zwei Punkten entweder eine Gerade mit der Funktiom \(y=mx+n\) oder eine Senkrechte zur x-Achse mit der Funktionsgleichung \(x=n\) durch die beiden Punkte aufstellen lässt.
-Eine Senkrechte vom Typen \(x=n\) wird benötigt, wenn Anfangs- und Endpunkt der Strecke auf der gleichen x-Koordinate liegen. Schließlich müsste eine solche lineare Funktion über eine unendliche Steigung verfügen.
-Ansonsten wird eine lineare Funktion vom Typen \(y=mx+n\) aufgestellt.
+Zu jeder möglichen Kombination aus zwei Punkten lässt sich wie beschrieben
+entweder eine Gerade mit einer Funktionsgleichung vom Typen \(y=mx+n\) oder
+eine Senkrechte parallel zur y-Achse mit einer Funktionsgleichung vom Typen \(x=n\)
+bilden.
+Bei letzterer entspricht  \(n\) dann logischerweise der gemeinsamen x-Koordinate.
 
-Die x- und y-Koordinaten des Anfangs- und Endpunktes einer jeden Strecke werden in je zwei Aggregaten in einer "`Strecke"'-Klasse (\texttt{line}) gespeichert.
-Der Konstruktor berechnet aus diesen beiden Punkten eine Geradengleichung.
-
-Falls eine lineare Funktion verwendet wird, wird die Steigung \(m\) der Geradengleichung folgendermaßen berechnet und in der Variablen \texttt{m\_} gespeichert:
-
+Wenn eine lineare Funktion vom Typen \(y=mx+n\) aufgestellt wird,
+kann deren Steigung \(m\) mit folgender Rechnung ermittelt werden:
 \begin{equation}
     m=\frac{y_{P2} - y_{P1}}{x_{P2} - x_{P1}}
 \end{equation}
 
-Der y-Achsenabschnitt \(n\) ergibt sich aus folgender Rechnung und wird in der Variablen \texttt{n\_} abgelegt:
-
+Der y-Achsenabschnitt \(n\) ergibt sich aus folgender Rechnung:
 \begin{equation}
     n=y_{P1} - x_{P1} \times m
 \end{equation}
 
-Falls, wie oben dargestellt, eine Senkrechte zur x-Achse benötigt wird, wird die Nullstelle dieser Senkrechten in der Variablen \texttt{n\_} vermerkt.
+Die x- und y-Koordinaten des Anfangs- und Endpunktes einer jeden Strecke werden
+in zwei Aggregaten\footnote{In der Programmiersprache C++ ist ein Aggregat eine
+Möglichkeit der Sprache, verschiedene Variablen in einem Objekt zu bündeln.
+Vorteil ist, dass der Konstruktor implizit und der Zugriff auf die Felder denkbar
+einfach ist.} 
+vom Typ \texttt{coord}\footnote{Coordinate} in einem Objekt der Klasse \texttt{line}
+gespeichert.
+Der Konstruktor dieser Klasse berechnet aus diesen beiden Punkten
+wie oben dargestellt eine Geradengleichung.
 
-Um später feststellen zu können, ob es sich um lineare Funktion oder um eine Senkrechte handelt, wird in der Klasse der Bool \texttt{isLinearFunction} entsprechend gesetzt.
+Die Variablen \(m\) und \(n\) werden in entsprechenden Feldern der Klasse notiert.
+Um später feststellen zu können, ob es sich um lineare Funktion oder um eine Senkrechte 
+handelt, wird außerdem der Bool \texttt{isLinearFunction\_} entsprechend gesetzt.
 
 \subsection {Bilden der möglichen Streckenkombinationen}
 Um für jede mögliche Streckenkombination das Vorhandensein eines Dreiecks prüfen zu können, müssen alle möglichen Kombination zunächst einmal aufgestellt werden. Dies habe ich mithilfe einer rekursiven Funktion implementiert.
 
-Diese interpretiert den Streckenauswahlprozess als einen binären Baum. Jede Strecke kann entweder ausgewählt werden oder nicht.
+Ich habe den Streckenauswahlprozess als einen binären Baum interpretiert. Jede Strecke kann entweder Teil einer Auswahl sein -- oder eben auch nicht.
 
-Das bedeutet, dass die Auswahlfunktion zunächst mit einer leeren Menge als Auswahl aufgerufen wird.
-Darauf kopiert sie diese Menge.
-Der kopierten Menge wird die erste Strecke hinzugefügt.
-In der nächsten Rekursionsstufe werden dann beide bisherigen Mengen dupliziert und jeweils die zweite Strecke hinzugefügt.
+Die Auswahlfunktion wird zunächst mit einer leeren Menge als Auswahl aufgerufen.
+Diese leere Menge bildet die Wurzel des Baumes.
 
-Sobald eine Menge drei Strecken enthält, kann überprüft werden, ob die enthaltenen Strecken ein Dreieck bilden. Sobald die Rekursion beendet ist, wurden alle möglichen Kombinationen überprüft.
+Durch Auswahl oder Nicht-Auswahl der ersten Strecke ergeben sich zwei Mengen: Wieder eine
+leere Menge (die erste Strecke wurde nicht ausgewählt) oder eine Menge mit der ersten
+Strecke als Inhalt (die erste Strecke wurde ausgewählt).
+
+In der nächsten Rekursionsstufe werden dann beide Mengen kopiert und den Kopien jeweils
+die zweite Strecke hinzugefügt. Die Mengen nach den ersten drei Rekursionen habe ich
+in der nebenstehenden Illustration dargestellt. TODO
+
+Sobald eine Menge drei Strecken enthält, kann überprüft werden, ob die enthaltenen
+Strecken ein Dreieck bilden.
+Hierzu kann Definition \ref{theo:dreiecke} herangezogen werden.
+
+Wenn die Streckenauswahl ein Dreieck bildet, werden die Strecken in einem Vektor
+gespeichert und an die nächsthöhere Rekursionsebene zurückgegeben.
+Diese gibt dann wiederum einen Vektor über alle Dreiecksvektoren an die nächste Ebene
+zurück.
+Schlussendlich wird eine Liste über alle möglichen Dreiecke zurückgegeben.
 
 \subsection{Streckenauswahlevaluation}
-Um zu überprüfen, ob eine Menge von drei Strecken ein Dreieck bildet, muss nur überprüft werden, ob jede der drei Strecken sich mit den anderen beiden Strecken schneidet.
-Dann existieren schließlich "`drei Ecken"'. Diese Überprüfung findet durch simples Ausprobieren statt.
+Zunächst müssen die Schnittpunkte zwischen den Strecken ermittelt werden.
+Je nachdem, welchen Funktionstyp die Strecken haben,
+müssen verschiedene Verfahren angewandt werden.
 
-Zwischen zwei linearen Funktion lässt sich der Schnittpunkt folgendermaßen durch Gleichsetzen ermitteln:
+Zwischen zwei linearen Funktion lässt sich der Schnittpunkt folgendermaßen durch
+Gleichsetzen ermitteln:
 
 \begin{equation}
     \begin{aligned}
@@ -55,32 +79,56 @@ Zwischen zwei linearen Funktion lässt sich der Schnittpunkt folgendermaßen dur
     \label{eq:linearschnitt}
 \end{equation}
 
-Der Schnittpunkt zwischen einer Geraden \(y=m_1x+n_1\) und einer Senkrechten \(x=n_2\), liegt bei der y-Koordinate, die die gerade an der x-Stelle der Senkrechten annimmt. 
+Der Schnittpunkt zwischen einer Geraden \(y=m_1x+n_1\) und einer Senkrechten \(x=n_2\),
+liegt bei der y-Koordinate, die die Gerade an der x-Stelle der Senkrechten annimmt.
+Zur Ermittlung dieses Wert muss die Senkrechte in die Gerade eingesetzt werden:
 
 \begin{equation}
     \begin{aligned}
         x &= n_2                    \\
+        y &= m_1 \times x + n_1 \qquad\vert\ \text{einsetzen}  \\
         y &= m_1 \times n_2 + n_1   \\
     \end{aligned}
     \label{eq:senkrechtschnitt}
 \end{equation}
 
-Falls beide Funktionen Senkrechten sind, können sie sich nur schneiden, wenn Start- oder Endpunkte sich überlappen.
-Ansonsten müssen beide Senkrechten parallel zueinander sein.
+Falls beide Funktionen Senkrechten sind, können sie sich nur schneiden,
+wenn Start- oder Endpunkte sich überlappen.
 Schließlich sind aufeinander liegende Strecken laut Aufgabenstellung ausgeschlossen.
+Wenn Start- und Endpunkt zweier Senkrechten sich überlappen,
+können diese beiden Senkrechten unmöglich gemeinsam mit einer Geraden
+ein Dreieck bilden. Daher kann angenommen werden, dass eine Auswahl mit zwei Senkrechten
+kein Dreieck bilden kann.
 
-Abschließend muss für jeden Schnittpunkt geprüft werden, ob er zwischen dem Start- und Endpunkt beider Strecken liegt.
-Schließlich können die Geraden sich außerhalb der Strecken, die nur ein Abschnitt der Geraden sind, schneiden.
+Abschließend muss für jeden Schnittpunkt geprüft werden,
+ob er zwischen dem Start- und Endpunkt beider Strecken liegt.
+Schließlich können die Geraden sich außerhalb der Strecken,
+die nur ein Abschnitt der Geraden sind, schneiden.
 Im Sinne der Aufgabenstellung zählen nur Schnittpunkte der Strecken.
 
-Obengenannte Rechnungen sind in der Klasse der Geraden implementiert. Je nachdem, welche Strecken der Funktion übergeben wurden, führt sie die entsprechenden Rechnungen durch. Diese Funktion gibt ein \texttt{pair<bool, Coord} zurück.
-Nur wenn der Bool auf true steht, ist im zweiten Feld des Paars ein Schnittpunkt vermerkt.
+Außerdem muss überprüft werden, dass die Schnittpunkte sich nicht gleichen.
+Schließlich hätte das Dreieck sonst einen Flächeninhalt von Null.
+Ein Beispiel für sich gleichende Schnittpunkte ist Abb. TODO.
 
-In einer weiteren Funktion, \texttt{isOnLine(..)}, wird, sodenn die Geraden sich schneiden, überprüft, ob die übergebene Koordinate zwischen oder auf den die Strecke begrenzenden Punkten liegt.
+Obengenannte Rechnungen sind in der Geradenklasse \texttt{line} in der Funktion
+\texttt{calculateIntersections} implementiert.
+Je nachdem, welche Strecken der Funktion übergeben wurden,
+führt sie die entsprechenden Rechnungen durch.
+Die Funktion gibt ein \texttt{pair<bool, Coord>} zurück.
+Wenn der Bool auf true steht,
+ist im zweiten Feld des Paars ein Schnittpunkt vermerkt.
+Ansonsten wurde kein Schnittpunkt gefunden.
 
-Wenn alle Strecken sich wie oben beschrieben kreuzen, bilden die übergebenen Strecken ein Dreieck. Dieses kann anschließend ausgegeben werden.
+In einer weiteren Funktion, \texttt{isOnLine(..)}, wird, sodenn
+die Geraden sich schneiden, überprüft, ob die übergebene Koordinate zwischen
+oder auf den die Strecke begrenzenden Punkten liegt.
+
+Wenn alle Strecken sich wie oben beschrieben schneiden und die Schnittpunkte verschieden
+sind, bilden die übergebenen Strecken ein Dreieck.
 
 \subsection {Grafische Ausgabe}
-TODO
-
-LAUFZEIT --> TODO
+Die grafische Ausgabe wurde mit HTML realisiert. Seit HTML5 kann SVG inline genutzt
+werden.
+Dies macht sich mein Programm zu nutze, indem es die Zeichnung und das Dreieck
+als SVG-Objekte im HTML-Dokument ausgibt.
+Den Ausgabecode habe ich aus Platzgründen nicht im Dokument aufgeführt.

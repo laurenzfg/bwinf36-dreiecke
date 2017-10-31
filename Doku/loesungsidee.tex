@@ -1,10 +1,39 @@
-Die Aufgabe habe ich so interpretiert, dass ein Dreieck aus drei beliebigen Strecken gebildet wird. Dabei ist irrelevant, ob das so gebildete Dreieck von einer anderen Strecke durchtrennt wird. Mit dieser Aufgabeninterpretation erhält man im ersten Beispiel die gesuchten neun Dreiecke.
-Die Suche nach Dreiecken habe ich als ein geometrisches Problem formuliert:
+Die Aufgabe habe ich so interpretiert, dass ein Dreieck aus drei beliebigen Strecken
+gebildet wird. Damit es sichtbar ist, muss es einen Flächeinhalt größer Null besitzen.
+Dabei ist es irrelevant, ob das so gebildete Dreieck von einer
+anderen Strecke durchtrennt wird.
+Daher reicht es, drei Strecken jeweils isoliert zu betrachten.
 
-\textbf{
-    Eine Auswahl von drei Strecken aus einer Menge von mindestens drei Stecken bilden ein Dreieck, sobald sich jede der ausgewählten Strecken mit den jeweils anderen schneiden.
-}
+Zur Lösung der Aufgabe habe ich sie anschließend in zwei Teilprobleme aufgeteilt:
+\begin{itemize}
+    \item[a] Dem Zusammenstellen aller möglichen Kombinationen aus drei Strecken
+    \item[b] Der Überprüfung, ob eine Kombination zusammen ein Dreieck bildet
+\end{itemize}
 
-Alle Streckenauswahlen, die ein Dreieck bilden, lassen sich also finden, indem alle möglichen Auswahlen daraufhin evaluiert werden, ob sie ein Dreieck bilden.
+Problem a kann mit einer in der Umsetzung beschriebenen rekursiven Funktion gelöst werden.
+Für Teilaufgabe b habe ich zunächst eine geeignete Definition von Dreiecken formuliert:
+\begin{definition} \label{theo:dreiecke}
+Drei Strecken bilden ein Dreieck mit einer Fläche größer Null,
+wenn jede Strecke die jeweils anderen schneidet.
+Die drei resultierenden Schnittpunkte müssen verschieden sein,
+sonst beträgt der Flächeninhalt Null.
+\end{definition}
 
-Der hier vorgestellte Algorithmus ist also vom Typ "`Brute Force"'. Mir ist keine effizientere Lösungsstrategie eingefallen.
+Um nun für Auswahlen von Strecken überprüfen zu können, ob sie auf die Definition 
+zutreffen, müssen also Schnittpunkte berechnet werden.
+Am effizientesten lassen sich Schnittpunkte mit Verfahren aus der Mathematik ermitteln.
+Hierfür konvertiere ich die Strecken, die alle druch zwei Punkte definiert sind, in Geraden.
+
+Zu beachten ist, dass nicht zu jeder Kombination von zwei Punkten eine lineare
+Funktion existiert. Wenn beide Punkte die gleiche x-Koordinate teilen, entsteht eine zur
+y-Achse parallele Senkrechte. Diese Senkrechten haben dann eine Funktionsgleichung von
+\(x=n\).
+
+Nachdem für alle Strecken durch sie verlaufende Geraden aufgestellt wurden, können
+im späteren Programmablauf Schnittpunkte durch gleichsetzen oder einsetzen ermittelt
+werden. Anschließend muss aber immer überprüft werden, dass der Schnittpunkt sich
+zwischen den die Strecke begrenzenden Punkten befindet. Außerdem gilt es zu überprüfen,
+ob alle drei Punkte sich unterscheiden.
+
+Alle Streckenauswahlen auf die Definition \ref{theo:dreiecke} zutrifft, bilden
+ein Dreieck im Sinne der Aufgabenstellung.
