@@ -87,14 +87,12 @@ bool Line::isOnLine (const Coord& coord) const {
                (coord.y_ <= upperL);
     } else {
         // Senkrechte
-        // Bed. 1: Liegt der Punkt ziemlich genau bei der Nullstelle der Senkrechten
-        //         (horizontal)
+        // Bed. 1: Liegt der Punkt ziemlich genau bei der Nullstelle der Senkrechten (horizontal)
         // Bed. 2 & 3: Liegt der Punkt zwischen den beiden Limits an der y-Achse
         return (fabs(coord.x_ - n_) < eps) &&
                (coord.y_ >= lowerL) &&
                (coord.y_ <= upperL);
     }
-
 }
 
 // Ausgabe des Funktionstermes zu Debugzwecken
