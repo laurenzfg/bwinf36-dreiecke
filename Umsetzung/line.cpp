@@ -71,10 +71,16 @@ pair<bool, Coord> Line::calculateIntersection (const Line& otherLine) const {
 
 // Liegt der übergebene Punkt auf der **Strecke** (NICHT Gerade)
 bool Line::isOnLine (const Coord& coord) const {
+    // Anfang und Ende dieser Strecke auf der x-Achse
+    double upperL = fmax (a_.x_, b_.x_) + eps;
+    double lowerL = fmin (a_.x_, b_.x_) - eps;
+    if (coord.x_ > upperL || coord.x_ < lowerL)
+        return false;
+
     // Anfang und Ende dieser Strecke auf der y-Achse
     // Die Grenzen werden um eps verschoben um Rechenfehler auszugleichen
-    double upperL = fmax (a_.y_, b_.y_) + eps;
-    double lowerL = fmin (a_.y_, b_.y_) - eps;
+    upperL = fmax (a_.y_, b_.y_) + eps;
+    lowerL = fmin (a_.y_, b_.y_) - eps;
 
     // Fallunterscheidung nach Funktionstyp nötig
     if (isLinearFunction_) {
