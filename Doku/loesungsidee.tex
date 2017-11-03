@@ -1,10 +1,11 @@
 Die Aufgabe habe ich so interpretiert, dass ein Dreieck aus drei beliebigen Strecken
-gebildet wird. Damit es sichtbar ist, muss es einen Flächeinhalt größer Null besitzen.
+gebildet wird.
+Außerdem muss es über einen Flächeninhalt größer Null verfügen.
 Dabei ist es irrelevant, ob das so gebildete Dreieck von einer
 anderen Strecke durchtrennt wird.
 Daher reicht es, drei Strecken jeweils isoliert zu betrachten.
 
-Zur Lösung der Aufgabe habe ich sie anschließend in zwei Teilprobleme aufgeteilt:
+Zur Lösung der Aufgabe habe ich diese anschließend in zwei Teilprobleme aufgeteilt:
 \begin{itemize}
     \item[a] Dem Zusammenstellen aller möglichen Kombinationen aus drei Strecken
     \item[b] Der Überprüfung, ob eine Kombination zusammen ein Dreieck bildet
@@ -13,16 +14,16 @@ Zur Lösung der Aufgabe habe ich sie anschließend in zwei Teilprobleme aufgetei
 Problem a kann mit einer in der Umsetzung beschriebenen rekursiven Funktion gelöst werden.
 Für Teilaufgabe b habe ich zunächst eine geeignete Definition von Dreiecken formuliert:
 \begin{definition} \label{theo:dreiecke}
-Drei Strecken bilden ein Dreieck mit einer Fläche größer Null,
+Drei Strecken bilden ein Dreieck,
 wenn jede Strecke die jeweils anderen schneidet.
-Die drei resultierenden Schnittpunkte müssen verschieden sein,
+Die drei Schnittpunkte müssen verschieden sein,
 sonst beträgt der Flächeninhalt Null.
 \end{definition}
 
 Um nun für Auswahlen von Strecken überprüfen zu können, ob sie auf die Definition 
 zutreffen, müssen also Schnittpunkte berechnet werden.
 Am effizientesten lassen sich Schnittpunkte mit Verfahren aus der Mathematik ermitteln.
-Hierfür konvertiere ich die Strecken, die alle druch zwei Punkte definiert sind, in Geraden.
+Hierfür konvertiere ich die Strecken, die alle durch zwei Punkte definiert sind, in Geraden.
 
 Zu beachten ist, dass nicht zu jeder Kombination von zwei Punkten eine lineare
 Funktion existiert. Wenn beide Punkte die gleiche x-Koordinate teilen, entsteht eine zur
@@ -30,10 +31,10 @@ y-Achse parallele Senkrechte. Diese Senkrechten haben dann eine Funktionsgleichu
 \(x=n\).
 
 Nachdem für alle Strecken durch sie verlaufende Geraden aufgestellt wurden, können
-im späteren Programmablauf Schnittpunkte durch gleichsetzen oder einsetzen ermittelt
+im späteren Programmablauf Schnittpunkte durch Gleich- oder Einsetzen ermittelt
 werden. Anschließend muss aber immer überprüft werden, dass der Schnittpunkt sich
 zwischen den die Strecke begrenzenden Punkten befindet. Außerdem gilt es zu überprüfen,
 ob alle drei Punkte sich unterscheiden.
 
-Alle Streckenauswahlen auf die Definition \ref{theo:dreiecke} zutrifft, bilden
+Alle Streckenauswahlen auf die die Definition \ref{theo:dreiecke} zutrifft, bilden
 ein Dreieck im Sinne der Aufgabenstellung.
