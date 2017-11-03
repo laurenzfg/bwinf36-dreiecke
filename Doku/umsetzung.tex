@@ -30,7 +30,7 @@ gespeichert.
 Der Konstruktor dieser Klasse berechnet aus diesen beiden Punkten
 wie oben dargestellt eine Geradengleichung.
 
-Die Variablen \(m\) und \(n\) werden in entsprechenden Feldern der Klasse notiert.
+Die Variablen \(m\) und \(n\) werden in entsprechenden Felder des Objektes notiert.
 Um später feststellen zu können, ob es sich um lineare Funktion oder um eine Senkrechte 
 handelt, wird außerdem der Bool \texttt{isLinearFunction\_} entsprechend gesetzt.
 
@@ -58,6 +58,7 @@ in Abbildung \ref{abb:streckrek} dargestellt.
 Sobald eine Menge drei Strecken enthält, kann überprüft werden, ob die enthaltenen
 Strecken ein Dreieck bilden.
 Hierzu kann Definition \ref{theo:dreiecke} herangezogen werden.
+Die genaue Umsetzung dieser Definition beschreibe ich in Abschnitt \ref{sec:eval}.
 
 Wenn die Streckenauswahl ein Dreieck bildet, werden die Strecken in einem Vektor
 gespeichert und an die nächsthöhere Rekursionsebene zurückgegeben.
@@ -66,7 +67,9 @@ zurück.
 Schlussendlich wird eine Liste über alle möglichen Dreiecke zurückgegeben.
 
 \subsection{Streckenauswahlevaluation}
-Zunächst müssen die Schnittpunkte zwischen den Strecken ermittelt werden.
+\label{sec:eval}
+Zur Überprüfung einer Streckenauswahl auf das Bilden eines Dreiecks
+müssen zunächst die Schnittpunkte zwischen den Strecken ermittelt werden.
 Je nachdem, welchen Funktionstyp die Strecken haben,
 müssen verschiedene Verfahren angewandt werden.
 
@@ -86,7 +89,7 @@ Gleichsetzen ermitteln:
 
 Der Schnittpunkt zwischen einer Geraden \(y=m_1x+n_1\) und einer Senkrechten \(x=n_2\),
 liegt bei der y-Koordinate, die die Gerade an der x-Stelle der Senkrechten annimmt.
-Zur Ermittlung dieses Wert muss die Senkrechte in die Gerade eingesetzt werden:
+Zur Ermittlung dieses Wert muss also die Senkrechte in die Gerade eingesetzt werden:
 
 \begin{equation}
     \begin{aligned}
@@ -103,7 +106,11 @@ Schließlich sind aufeinander liegende Strecken laut Aufgabenstellung ausgeschlo
 Wenn Start- und Endpunkt zweier Senkrechten sich überlappen,
 können diese beiden Senkrechten unmöglich gemeinsam mit einer Geraden
 ein Dreieck bilden. Daher kann angenommen werden, dass eine Auswahl mit zwei Senkrechten
-kein Dreieck bilden kann.
+kein Dreieck bilden kann.\footnote{Den Sonderfall, dass zwei Senkrechten oder zwei Geraden
+mit gleicher Steigung direkt aneinander grenzen und mit zwei weiteren Geraden ein Dreieck
+bilden, beachte ich nicht, da diese beiden Strecken in der Eingabedatei als eine Strecke
+angegeben werden könnten. Mit solchen Sonderfällen ist bei konstruierten Rätseln nicht
+zu rechnen.}
 
 \begin{wrapfigure}{r}{0.3\textwidth}
     \begin{center}
@@ -128,7 +135,7 @@ Je nachdem, welche Strecken der Funktion übergeben wurden,
 führt sie die entsprechenden Rechnungen durch.
 Die Funktion gibt ein \texttt{pair<bool, Coord>} zurück.
 Wenn der Bool auf true steht,
-ist im zweiten Feld des Paars ein Schnittpunkt vermerkt.
+ist im zweiten Feld des Paares ein Schnittpunkt vermerkt.
 Ansonsten wurde kein Schnittpunkt gefunden.
 
 In einer weiteren Funktion, \texttt{isOnLine(..)}, wird, sodenn
